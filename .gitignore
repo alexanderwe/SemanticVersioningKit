@@ -3,3 +3,6 @@
 /Packages
 /*.xcodeproj
 xcuserdata/
+.bundle/**
+.vendor/**
+.swiftpm
