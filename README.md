@@ -9,7 +9,7 @@
    </a>
 
    <a href="https://github.com/alexanderwe/SemanticVersioningKit">
-      <img src="https://github.com/alexanderwe/SemanticVersioningKit/workflows/CI/badge.svg" alt="CI">
+      <img src="https://github.com/alexanderwe/SemanticVersioningKit/workflows/Main%20Branch%20CI/badge.svg" alt="CI">
    </a>
 </p>
 
