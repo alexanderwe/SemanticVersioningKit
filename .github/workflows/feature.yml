@@ -1,10 +1,10 @@
 name: Feature Branch CI
 on:
-  push:
-    branches:
+  pull_request:
+    # Sequence of patterns matched against refs/heads
+    branches:    
+      - "main"
       - "develop"
-      - "feature/*"
-      - "hotfix/*"
 
 jobs:
   tests:
@@ -12,7 +12,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Run unit tests
         run: |
           swift test --enable-code-coverage

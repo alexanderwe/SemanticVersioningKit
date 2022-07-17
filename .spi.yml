@@ -1,0 +1,10 @@
+version: 1
+builder:
+  configs:
+  - platform: ios
+    scheme: SemanticVersioningKit
+  - platform: tvos
+    scheme: SemanticVersioningKit
+  - platform: macos
+    scheme: SemanticVersioningKit
+  - documentation_targets: [SemanticVersioningKit]

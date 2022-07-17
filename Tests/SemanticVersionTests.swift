@@ -14,7 +14,7 @@ final class SemanticVersionTests: XCTestCase {
     func testCore() throws {
         let semverString = "1.0.0"
 
-        let version = try XCTUnwrap(SemanticVersion(data: semverString))
+        let version = try XCTUnwrap(SemanticVersion(input: semverString))
         
         XCTAssertEqual(version.major, 1)
         XCTAssertEqual(version.minor, 0)
@@ -25,7 +25,7 @@ final class SemanticVersionTests: XCTestCase {
     func testPreReleaseIdentifiers1() throws {
         let semverString = "1.0.0-alpha"
         
-        let version = try XCTUnwrap(SemanticVersion(data: semverString))
+        let version = try XCTUnwrap(SemanticVersion(input: semverString))
         
         XCTAssertEqual(version.major, 1)
         XCTAssertEqual(version.minor, 0)
@@ -40,7 +40,7 @@ final class SemanticVersionTests: XCTestCase {
     func testPreReleaseIdentifiers2() throws {
         let semverString = "1.0.0-alpha.1"
 
-        let version = try XCTUnwrap(SemanticVersion(data: semverString))
+        let version = try XCTUnwrap(SemanticVersion(input: semverString))
         
         XCTAssertEqual(version.major, 1)
         XCTAssertEqual(version.minor, 0)
@@ -56,7 +56,7 @@ final class SemanticVersionTests: XCTestCase {
     func testPreReleaseIdentifiers3() throws {
         let semverString = "1.0.0-x.7.z.92"
 
-        let version = try XCTUnwrap(SemanticVersion(data: semverString))
+        let version = try XCTUnwrap(SemanticVersion(input: semverString))
         
         XCTAssertEqual(version.major, 1)
         XCTAssertEqual(version.minor, 0)
@@ -74,7 +74,7 @@ final class SemanticVersionTests: XCTestCase {
     func testPreReleaseIdentifiers4() throws {
         let semverString = "1.0.0-x-y-z.-"
 
-        let version = try XCTUnwrap(SemanticVersion(data: semverString))
+        let version = try XCTUnwrap(SemanticVersion(input: semverString))
         
         XCTAssertEqual(version.major, 1)
         XCTAssertEqual(version.minor, 0)
@@ -90,7 +90,7 @@ final class SemanticVersionTests: XCTestCase {
     func testBuildIdentifiers1() throws {
         let semverString = "1.0.0+20130313144700"
 
-        let version = try XCTUnwrap(SemanticVersion(data: semverString))
+        let version = try XCTUnwrap(SemanticVersion(input: semverString))
         
         XCTAssertEqual(version.major, 1)
         XCTAssertEqual(version.minor, 0)
@@ -105,7 +105,7 @@ final class SemanticVersionTests: XCTestCase {
     func testBuildIdentifiers2() throws {
         let semverString = "1.0.0+exp.sha.5114f85"
 
-        let version = try XCTUnwrap(SemanticVersion(data: semverString))
+        let version = try XCTUnwrap(SemanticVersion(input: semverString))
         
         XCTAssertEqual(version.major, 1)
         XCTAssertEqual(version.minor, 0)
@@ -122,7 +122,7 @@ final class SemanticVersionTests: XCTestCase {
     func testBuildIdentifiers3() throws {
         let semverString = "1.0.0+21AF26D3--117B344092BD"
 
-        let version = try XCTUnwrap(SemanticVersion(data: semverString))
+        let version = try XCTUnwrap(SemanticVersion(input: semverString))
         
         XCTAssertEqual(version.major, 1)
         XCTAssertEqual(version.minor, 0)
@@ -137,7 +137,7 @@ final class SemanticVersionTests: XCTestCase {
     func testPreAndBuildIdentifiers() throws {
         let semverString = "1.0.0-alpha+001"
 
-        let version = try XCTUnwrap(SemanticVersion(data: semverString))
+        let version = try XCTUnwrap(SemanticVersion(input: semverString))
         
         XCTAssertEqual(version.major, 1)
         XCTAssertEqual(version.minor, 0)
@@ -161,18 +161,4 @@ final class SemanticVersionTests: XCTestCase {
         XCTAssertEqual("1.0.0+21AF26D3--117B344092BD", "\(withBuildIdentifiers)")
         XCTAssertEqual("1.0.0-alpha.1+exp.sha.5114f85", "\(withPreReleaseAndBuildIdentifiers)")
     }
-    
-    
-    static var allTests = [
-        ("testCore", testCore),
-        ("testPreReleaseIdentifiers1", testPreReleaseIdentifiers1),
-        ("testPreReleaseIdentifiers2", testPreReleaseIdentifiers2),
-        ("testPreReleaseIdentifiers3", testPreReleaseIdentifiers3),
-        ("testPreReleaseIdentifiers4", testPreReleaseIdentifiers4),
-        ("testBuildIdentifiers1", testBuildIdentifiers1),
-        ("testBuildIdentifiers2", testBuildIdentifiers2),
-        ("testBuildIdentifiers3", testBuildIdentifiers3),
-        ("testPreAndBuildIdentifiers", testPreAndBuildIdentifiers)
-    ]
 }
-
