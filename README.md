@@ -53,8 +53,8 @@ let versionWithAdditions = SemanticVersion(major: 1, minor: 0, patch: 0, preRele
 It is also possible to create a `SemanticVersion` from a `String` representation. Just be aware that the initialization can fail due to the used `String` not conforming to the Semantic Versioning format. Therefore an optional `SemanticVersion` is returned in those cases.
 
 ```swift
-let version = SemanticVersion("1.0.0")
-let failed = SemanticVersion(".0.0")
+let version = try SemanticVersion(input: "1.0.0")
+let failed = try SemanticVersion(input: ".0.0")
 ```
 
 ## Contributing
