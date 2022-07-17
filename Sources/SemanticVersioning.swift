@@ -9,72 +9,113 @@ import Foundation
 import Parsing
 
 // MARK: - SemanticVersion
+/// A typesafe representation of a Semantic Version
+///
+/// A semantic version is build with the following schema:
+/// ```text
+/// MAJOR.MINOR.PATCH
+/// ```
+/// In addition labels for pre-releases and build meta data can be added.
+///
+/// Example for pre-release:
+/// ```
+/// 1.0.0-alpha
+/// ```
+/// Example for build metadata:
+/// ```
+/// 1.0.0+20130313144700
+/// ```
+/// Pre-release identifiers and build metadata are also able to be combined:
+/// ```
+/// 1.0.0-beta+exp.sha.5114f85
+/// ```
 public struct SemanticVersion {
 
     let core: Core
+
+    /// Identifiers denoting a pre-release
     public let preReleaseIdentifiers: [String]
+
+    /// Additional build meta data
     public let buildIdentifiers: [String]
-    
+
+    /// The major version number
+    ///
+    /// Increased when incompatible API changes are made
     public var major: Int {
         return core.major
     }
-    
+
+    /// The minor version number
+    ///
+    /// Increased when functionality is added in a backwards compatible manner
     public var minor: Int {
         core.minor
     }
-    
+
+    /// The patch version number
+    ///
+    /// Increased when backwards compatible bug fixes are made
     public var patch: Int {
         core.patch
     }
 }
 
 // MARK: - Parser
-/// A typesafe representation of a Semantic Version
 extension SemanticVersion {
     
     private static let parser: AnyParser<Substring, SemanticVersion> = {
         
-        let alphaNumericAndHypen = Prefix<Substring>(while: { $0.isLetter || $0.isNumber || $0 == "-" })
-            
+        let alphaNumericAndHypen = Prefix<Substring> { ($0.isLetter || $0.isNumber || $0.isSymbol || $0 == "-") && $0 != "+" }.eraseToAnyParser()
+
         // Pre-Release identifiers
         let preReleaseIdentifier = alphaNumericAndHypen
             .map(String.init)
         
-        let preReleaseIdentifiersParser = Skip(StartsWith("-"))
-            .take(Many(preReleaseIdentifier, separator: StartsWith(".")))
-            
+        let preReleaseIdentifiersParser = Parse {
+            "-"
+            Many {
+                preReleaseIdentifier
+            } separator: {
+               "."
+            }
+        }.eraseToAnyParser()
+
         // Build identifiers
         let buildIdentifier = alphaNumericAndHypen
             .map(String.init)
         
-        let buildIdentifierParser = Skip(StartsWith("+"))
-            .take(Many(buildIdentifier, separator: StartsWith(".")))
-        
-        return Core.parser
-            .take(Parsers.OptionalParser(preReleaseIdentifiersParser))
-            .take(Parsers.OptionalParser(buildIdentifierParser))
-            .map { core, preReleaseIdentifiers, buildIdentifierParser  in
-                return SemanticVersion(core: core,
-                                       preReleaseIdentifiers: preReleaseIdentifiers != nil ? preReleaseIdentifiers! : [],
-                                       buildIdentifiers:  buildIdentifierParser != nil ? buildIdentifierParser! : []
-                )
+        let buildIdentifiersParser = Parse {
+            "+"
+            Many {
+                preReleaseIdentifier
+            } separator: {
+               "."
             }
-            .eraseToAnyParser()
+        }.eraseToAnyParser()
+        
+        return Parse {
+            Core.parser
+            Optionally { preReleaseIdentifiersParser }
+            Optionally { buildIdentifiersParser }
+        }.map { core, preReleaseIdentifiers, buildIdentifierParser  in
+            return SemanticVersion(
+                core: core,
+                preReleaseIdentifiers: preReleaseIdentifiers != nil ? preReleaseIdentifiers! : [],
+                buildIdentifiers:  buildIdentifierParser != nil ? buildIdentifierParser! : []
+            )
+        }
+        .eraseToAnyParser()
     }()
-    
     
     /// Initialize a new `SemanticVersion` with a `String` representation
     ///
-    /// If the `data` does not represent a Semantic Versioning conforming `String` the initialization fails and `nil` is returned.
+    /// If the `data` does not represent a Semantic Versioning conforming `String` the initialization fails an an error is thrown
     ///
     /// - Parameters:
     ///   - data: String to parse
-    public init?(data: String) {
-        guard let match = SemanticVersion.parser.parse(data[...]) else {
-            return nil
-        }
-        
-        self = match
+    public init(input: String) throws {
+        self = try Self.parser.parse(input)
     }
     
     /// Initialize a new Semantic Version
@@ -131,7 +172,6 @@ extension SemanticVersion: Comparable {
     }
 }
 
-
 // MARK: - Core
 extension SemanticVersion {
     internal struct Core {
@@ -140,17 +180,15 @@ extension SemanticVersion {
         let patch: Int
         
         internal static let parser:  AnyParser<Substring, SemanticVersion.Core> = {
-            
-           return Int.parser()
-                .skip(StartsWith("."))
-                .take(Int.parser())
-                .skip(StartsWith("."))
-                .take(Int.parser())
-                .map { major, minor, patch in
-                    return Core(major:major, minor: minor, patch: patch)
-                }
-                .eraseToAnyParser()
-
+            Parse {
+                Int.parser()
+                "."
+                Int.parser()
+                "."
+                Int.parser()
+            }.map {
+                return Core(major: $0, minor: $1, patch: $2)
+            }.eraseToAnyParser()
         }()
     }
 }
@@ -169,13 +207,11 @@ extension SemanticVersion: CustomStringConvertible {
             rep.append("+")
             rep.append(buildIdentifiers.joined(separator: "."))
         }
-        
-        
+
         return rep
     }
     
 }
-
 
 // MARK: - Helpers
 extension String {

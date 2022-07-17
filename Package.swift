@@ -15,7 +15,7 @@ let package = Package(
             targets: ["SemanticVersioningKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-parsing", .exact("0.1.1"))
+        .package(url: "https://github.com/pointfreeco/swift-parsing", .exact("0.10.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
