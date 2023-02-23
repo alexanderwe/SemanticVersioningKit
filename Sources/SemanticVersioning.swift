@@ -180,14 +180,12 @@ extension SemanticVersion {
         let patch: Int
         
         internal static let parser:  AnyParser<Substring, SemanticVersion.Core> = {
-            Parse {
-                Int.parser()
+            Parse(Core.init) {
+                Int.parser(of: Substring.self)
                 "."
-                Int.parser()
+                Int.parser(of: Substring.self)
                 "."
-                Int.parser()
-            }.map {
-                return Core(major: $0, minor: $1, patch: $2)
+                Int.parser(of: Substring.self)
             }.eraseToAnyParser()
         }()
     }

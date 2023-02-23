@@ -19,10 +19,10 @@ let package = Package(
     ],
     dependencies: [
         // Source code dependencies
-        .package(url: "https://github.com/pointfreeco/swift-parsing", exact: "0.10.0"),
+        .package(url: "https://github.com/pointfreeco/swift-parsing", exact: "0.11.0"),
 
         // Plugins
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.1.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
