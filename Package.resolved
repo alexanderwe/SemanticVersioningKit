@@ -14,7 +14,16 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-docc-plugin",
       "state" : {
-        "revision" : "3303b164430d9a7055ba484c8ead67a52f7b74f6",
+        "revision" : "10bc670db657d11bdd561e07de30a9041311b2b1",
+        "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "swift-docc-symbolkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-docc-symbolkit",
+      "state" : {
+        "revision" : "b45d1f2ed151d057b54504d653e0da5552844e34",
         "version" : "1.0.0"
       }
     },
@@ -23,17 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-parsing",
       "state" : {
-        "revision" : "bc92e84968990b41640214b636667f35b6e5d44c",
-        "version" : "0.10.0"
-      }
-    },
-    {
-      "identity" : "xctest-dynamic-overlay",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
-      "state" : {
-        "revision" : "ef8e14e7ce1c0c304c644c6ba365d06c468ded6b",
-        "version" : "0.3.3"
+        "revision" : "4bb9192468c1a8be57f46b7d6fd4f561c88b2195",
+        "version" : "0.11.0"
       }
     }
   ],
