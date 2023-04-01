@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-docc-plugin",
       "state" : {
-        "revision" : "10bc670db657d11bdd561e07de30a9041311b2b1",
-        "version" : "1.1.0"
+        "revision" : "9b1258905c21fc1b97bf03d1b4ca12c4ec4e5fda",
+        "version" : "1.2.0"
       }
     },
     {
@@ -32,8 +32,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-parsing",
       "state" : {
-        "revision" : "4bb9192468c1a8be57f46b7d6fd4f561c88b2195",
-        "version" : "0.11.0"
+        "revision" : "c6e2241daa46e5c6e5027a93b161bca6ba692bcc",
+        "version" : "0.12.0"
+      }
+    },
+    {
+      "identity" : "swiftformat",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nicklockwood/SwiftFormat",
+      "state" : {
+        "revision" : "a5d58763da90d8240b2a0f7f2b57da29438a0530",
+        "version" : "0.51.3"
       }
     }
   ],
