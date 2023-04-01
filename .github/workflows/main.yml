@@ -35,8 +35,8 @@ jobs:
           target: SemanticVersioningKit
           output: ./docs
           hosting-base-path: SemanticVersioningKit
-          disable-indexing: 'true'
-          transform-for-static-hosting: 'true'
+          disable-indexing: "true"
+          transform-for-static-hosting: "true"
       - name: Commit documentation
         run: |
           git config user.name github-actions

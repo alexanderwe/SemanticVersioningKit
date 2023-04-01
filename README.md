@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="https://developer.apple.com/swift/">
-      <img src="https://img.shields.io/badge/Swift-5.0-orange.svg?style=flat" alt="Swift 5.0">
+      <img src="https://img.shields.io/badge/Swift-5.7-orange.svg?style=flat" alt="Swift 5.8">
    </a>
    <a href="https://github.com/apple/swift-package-manager">
       <img src="https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg" alt="SPM">
