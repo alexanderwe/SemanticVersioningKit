@@ -25,7 +25,7 @@ To integrate using Apple's [Swift Package Manager](https://swift.org/package-man
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/alexanderwe/SemanticVersioningKit.git", from: "1.0.0")
+    .package(url: "https://github.com/alexanderwe/SemanticVersioningKit.git", from: "2.1.2")
 ]
 ```
 
@@ -50,7 +50,7 @@ let version = SemanticVersion(major: 1, minor: 0, patch: 0) // "1.0.0"
 let versionWithAdditions = SemanticVersion(major: 1, minor: 0, patch: 0, preReleaseIdentifiers: ["alpha", "1"], buildIdentifiers: ["exp","sha","5114f85"]) // "1.0.0-alpha.1+exp.sha.5114f85"
 ```
 
-It is also possible to create a `SemanticVersion` from a `String` representation. Just be aware that the initialization can fail due to the used `String` not conforming to the Semantic Versioning format. Therefore an optional `SemanticVersion` is returned in those cases.
+It is also possible to create a `SemanticVersion` from a `String` representation. Just be aware that the initialization can fail due to the used `String` not conforming to the Semantic Versioning format.
 
 ```swift
 let version = try SemanticVersion(input: "1.0.0")
