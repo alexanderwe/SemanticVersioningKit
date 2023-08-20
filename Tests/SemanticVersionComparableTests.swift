@@ -72,13 +72,4 @@ final class SemanticVersionComparableTests: XCTestCase {
         XCTAssertGreaterThan(right, left)
         XCTAssertNotEqual(left, right)
     }
-
-    static var allTests = [
-        ("testCoreMajorComparison", testCoreMajorComparison),
-        ("testCoreMinorComparison", testCoreMinorComparison),
-        ("testCorePatchComparison", testCorePatchComparison),
-        ("testCoreReleaseIdentifiers1", testCoreReleaseIdentifiers1),
-        ("testCoreReleaseIdentifiers2", testCoreReleaseIdentifiers2),
-        ("testCoreReleaseIdentifiers3", testCoreReleaseIdentifiers3),
-    ]
 }
