@@ -29,7 +29,7 @@ import Parsing
 /// ```
 /// 1.0.0-beta+exp.sha.5114f85
 /// ```
-public struct SemanticVersion: Sendable {
+public struct SemanticVersion {
     let core: Core
 
     /// Identifiers denoting a pre-release
@@ -202,6 +202,11 @@ extension SemanticVersion: CustomStringConvertible {
         return rep
     }
 }
+
+// MARK: - Sendable
+#if swift(>=5.5)
+extension SemanticVersion: Sendable {}
+#endif
 
 // MARK: - Helpers
 extension String {
