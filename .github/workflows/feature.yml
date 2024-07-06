@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Select Xcode 16.0
         run: sudo xcode-select -s /Applications/Xcode_16.0.app
-      - name: Setup Swift version
-        uses: swift-actions/setup-swift@v1
-        with:
-          swift-version: "6.0"
+      # - name: Setup Swift version
+      #   uses: swift-actions/setup-swift@v2
+      #   with:
+      #     swift-version: "6.0"
       - name: Run unit tests
         run: |
           swift test --enable-code-coverage
