@@ -44,7 +44,8 @@ let package = Package(
         .testTarget(
             name: "SemanticVersioningKitTests",
             dependencies: ["SemanticVersioningKit"],
-            path: "Tests"
+            path: "Tests",
+            swiftSettings: [.swiftLanguageVersion(.v6)]
         ),
     ]
 )
