@@ -20,4 +20,4 @@ jobs:
       #     swift-version: "6.0"
       - name: Run unit tests
         run: |
-          swift test --enable-code-coverage
+          swift test --enable-code-coverage --enable-experimental-swift-testing
