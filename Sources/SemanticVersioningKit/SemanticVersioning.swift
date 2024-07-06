@@ -29,7 +29,7 @@ import Parsing
 /// ```
 /// 1.0.0-beta+exp.sha.5114f85
 /// ```
-public struct SemanticVersion {
+public struct SemanticVersion: Sendable {
     let core: Core
 
     /// Identifiers denoting a pre-release
