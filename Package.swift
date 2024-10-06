@@ -38,14 +38,12 @@ let package = Package(
             ],
             resources: [
                 .copy("PrivacyInfo.xcprivacy")
-            ],
-            swiftSettings: [.swiftLanguageVersion(.v6)]
+            ]
         ),
         .testTarget(
             name: "SemanticVersioningKitTests",
             dependencies: ["SemanticVersioningKit"],
-            path: "Tests",
-            swiftSettings: [.swiftLanguageVersion(.v6)]
+            path: "Tests"
         ),
     ]
 )
