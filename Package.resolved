@@ -1,4 +1,5 @@
 {
+  "originHash" : "1d84bdbbd8452f0df606166e38abdd872539ec14631bf18097b2346d5d58937f",
   "pins" : [
     {
       "identity" : "swift-case-paths",
@@ -41,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nicklockwood/SwiftFormat",
       "state" : {
-        "revision" : "1780bcdc3237633a50e4aaa97422de37e77130bd",
-        "version" : "0.52.2"
+        "revision" : "dd989a46d0c6f15c016484bab8afe5e7a67a4022",
+        "version" : "0.54.0"
       }
     },
     {
@@ -55,5 +56,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

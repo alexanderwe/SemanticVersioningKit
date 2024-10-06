@@ -3,8 +3,11 @@ builder:
   configs:
   - platform: ios
     scheme: SemanticVersioningKit
+    swift_version: '6.0'
   - platform: tvos
     scheme: SemanticVersioningKit
+    swift_version: '6.0'
   - platform: macos
     scheme: SemanticVersioningKit
+    swift_version: '6.0'
   - documentation_targets: [SemanticVersioningKit]

@@ -7,32 +7,32 @@ on:
 jobs:
   tests:
     name: Unit-Tests
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Select Xcode 15.2
-        run: sudo xcode-select -s /Applications/Xcode_15.2.app
+      - name: Select Xcode 16.0
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app
       - name: Setup Swift version
-        uses: swift-actions/setup-swift@v1
+        uses: swift-actions/setup-swift@v2
         with:
-          swift-version: "5.9.2"
+          swift-version: "6.0"
       - name: Run unit tests
         run: |
           swift test --enable-code-coverage
   update_documentation:
     name: Update documentation
-    runs-on: macos-14
+    runs-on: macos-latest
     needs: tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Select Xcode 15.2
-        run: sudo xcode-select -s /Applications/Xcode_15.2.app
+      - name: Select Xcode 16.0
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app
       - name: Setup Swift version
-        uses: swift-actions/setup-swift@v1
+        uses: swift-actions/setup-swift@v2
         with:
-          swift-version: "5.9.2"
+          swift-version: "6.0"
       - name: Generate documentation
         uses: fwcd/swift-docc-action@v1
         with:

@@ -1,11 +1,14 @@
 # SemanticVersioningKit
 
+
 <p align="center">
-    <a href="https://developer.apple.com/swift/">
-      <img src="https://img.shields.io/badge/Swift-5.9.2-orange.svg?style=flat" alt="Swift 5.9.2">
+
+   <a href="https://swiftpackageindex.com/alexanderwe/SemanticVersioningKit">
+      <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Falexanderwe%2FSemanticVersioningKit%2Fbadge%3Ftype%3Dswift-versions" />
    </a>
-   <a href="https://github.com/apple/swift-package-manager">
-      <img src="https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg" alt="SPM">
+
+   <a href="https://swiftpackageindex.com/alexanderwe/SemanticVersioningKit">
+    <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Falexanderwe%2FSemanticVersioningKit%2Fbadge%3Ftype%3Dplatforms" />
    </a>
 
    <a href="https://github.com/alexanderwe/SemanticVersioningKit">

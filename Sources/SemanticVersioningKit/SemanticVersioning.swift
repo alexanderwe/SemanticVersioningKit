@@ -42,7 +42,7 @@ public struct SemanticVersion {
     ///
     /// Increased when incompatible API changes are made
     public var major: Int {
-        return core.major
+        core.major
     }
 
     /// The minor version number
@@ -62,7 +62,7 @@ public struct SemanticVersion {
 
 // MARK: - Parser
 extension SemanticVersion {
-    private static let parser: AnyParser<Substring, SemanticVersion> = {
+    private nonisolated(unsafe) static let parser: AnyParser<Substring, SemanticVersion> = {
         let alphaNumericAndHypen = Prefix<Substring> { ($0.isLetter || $0.isNumber || $0.isSymbol || $0 == "-") && $0 != "+" }
             .eraseToAnyParser()
 
@@ -134,7 +134,7 @@ extension SemanticVersion {
 // MARK: - Comparable
 extension SemanticVersion: Comparable {
     public static func == (lhs: SemanticVersion, rhs: SemanticVersion) -> Bool {
-        return !(lhs < rhs) && !(lhs > rhs)
+        !(lhs < rhs) && !(lhs > rhs)
     }
 
     // Credit: https://github.com/glwithu06/Semver.swift/blob/master/Sources/Semver.swift
@@ -171,12 +171,12 @@ extension SemanticVersion: Comparable {
 
 // MARK: - Core
 extension SemanticVersion {
-    internal struct Core {
+    struct Core {
         let major: Int
         let minor: Int
         let patch: Int
 
-        internal static let parser: AnyParser<Substring, SemanticVersion.Core> = Parse(Core.init) {
+        nonisolated(unsafe) static let parser: AnyParser<Substring, SemanticVersion.Core> = Parse(Core.init) {
             Int.parser()
             "."
             Int.parser()
@@ -203,9 +203,14 @@ extension SemanticVersion: CustomStringConvertible {
     }
 }
 
+// MARK: - Sendable
+#if swift(>=5.5)
+extension SemanticVersion: Sendable {}
+#endif
+
 // MARK: - Helpers
 extension String {
     fileprivate var isNumber: Bool {
-        return !isEmpty && rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
+        !isEmpty && rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
     }
 }
