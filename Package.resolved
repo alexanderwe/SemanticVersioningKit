@@ -1,5 +1,5 @@
 {
-  "originHash" : "e4492b8c9f6fcc39f1f0deec4d6e8986fd581fc49e81f081dde85a8b3042370c",
+  "originHash" : "46c1d0b0bfb0e90a5e9df798a98849fa86937b0ace0574bb74546436f517bacf",
   "pins" : [
     {
       "identity" : "swift-case-paths",
@@ -11,39 +11,12 @@
       }
     },
     {
-      "identity" : "swift-docc-plugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-docc-plugin",
-      "state" : {
-        "revision" : "26ac5758409154cc448d7ab82389c520fa8a8247",
-        "version" : "1.3.0"
-      }
-    },
-    {
-      "identity" : "swift-docc-symbolkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-docc-symbolkit",
-      "state" : {
-        "revision" : "b45d1f2ed151d057b54504d653e0da5552844e34",
-        "version" : "1.0.0"
-      }
-    },
-    {
       "identity" : "swift-parsing",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-parsing",
       "state" : {
         "revision" : "3432cb81164dd3d69a75d0d63205be5fbae2c34b",
         "version" : "0.14.1"
-      }
-    },
-    {
-      "identity" : "swiftformat",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nicklockwood/SwiftFormat",
-      "state" : {
-        "revision" : "dd989a46d0c6f15c016484bab8afe5e7a67a4022",
-        "version" : "0.54.0"
       }
     },
     {
