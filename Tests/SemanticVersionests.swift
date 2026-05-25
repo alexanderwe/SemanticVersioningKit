@@ -9,7 +9,6 @@ import Foundation
 import Testing
 @testable import SemanticVersioningKit
 
-@Suite
 struct SemanticVersionTests {
     @Test
     func coreVersionParsed() throws {
@@ -38,7 +37,7 @@ struct SemanticVersionTests {
         #expect(version.minor == 0)
         #expect(version.patch == 0)
 
-        #expect(version.buildIdentifiers.count == 0)
+        #expect(version.buildIdentifiers.isEmpty)
 
         #expect(version.preReleaseIdentifiers.count == 1)
         #expect(version.preReleaseIdentifiers[0] == "alpha")
@@ -56,7 +55,7 @@ struct SemanticVersionTests {
         #expect(version.minor == 0)
         #expect(version.patch == 0)
 
-        #expect(version.buildIdentifiers.count == 0)
+        #expect(version.buildIdentifiers.isEmpty)
 
         #expect(version.preReleaseIdentifiers.count == 2)
         #expect(version.preReleaseIdentifiers[0] == "alpha")
@@ -76,7 +75,7 @@ struct SemanticVersionTests {
         #expect(version.minor == 0)
         #expect(version.patch == 0)
 
-        #expect(version.buildIdentifiers.count == 0)
+        #expect(version.buildIdentifiers.isEmpty)
 
         #expect(version.preReleaseIdentifiers.count == 4)
         #expect(version.preReleaseIdentifiers[0] == "x")
@@ -98,7 +97,7 @@ struct SemanticVersionTests {
         #expect(version.minor == 0)
         #expect(version.patch == 0)
 
-        #expect(version.buildIdentifiers.count == 0)
+        #expect(version.buildIdentifiers.isEmpty)
 
         #expect(version.preReleaseIdentifiers.count == 2)
         #expect(version.preReleaseIdentifiers[0] == "x-y-z")
@@ -118,7 +117,7 @@ struct SemanticVersionTests {
         #expect(version.minor == 0)
         #expect(version.patch == 0)
 
-        #expect(version.preReleaseIdentifiers.count == 0)
+        #expect(version.preReleaseIdentifiers.isEmpty)
 
         #expect(version.buildIdentifiers.count == 1)
         #expect(version.buildIdentifiers[0] == "20130313144700")
@@ -137,7 +136,7 @@ struct SemanticVersionTests {
         #expect(version.minor == 0)
         #expect(version.patch == 0)
 
-        #expect(version.preReleaseIdentifiers.count == 0)
+        #expect(version.preReleaseIdentifiers.isEmpty)
 
         #expect(version.buildIdentifiers.count == 3)
         #expect(version.buildIdentifiers[0] == "exp")
@@ -158,7 +157,7 @@ struct SemanticVersionTests {
         #expect(version.minor == 0)
         #expect(version.patch == 0)
 
-        #expect(version.preReleaseIdentifiers.count == 0)
+        #expect(version.preReleaseIdentifiers.isEmpty)
 
         #expect(version.buildIdentifiers.count == 1)
         #expect(version.buildIdentifiers[0] == "21AF26D3--117B344092BD")
@@ -222,7 +221,7 @@ struct SemanticVersionTests {
             SemanticVersion(major: 1, minor: 0, patch: 0, preReleaseIdentifiers: ["alpha", "2"])
         )
     ])
-    func comparisonsAreCorrect(versions: (SemanticVersion, SemanticVersion)) throws {
+    func comparisonsAreCorrect(versions: (SemanticVersion, SemanticVersion)) {
         let (left, right) = versions
 
         #expect(left < right)

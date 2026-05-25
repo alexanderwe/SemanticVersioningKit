@@ -1,9 +1,16 @@
+# exclusion
+
+--exclude .swiftpm, \
+    .build \
+
 # format options
+
 --allman false # use K&R indentation style
 --binarygrouping 4,8
 --closingparen balanced
 --commas always
 --comments indent
+--computedvarattrs same-line
 --decimalgrouping 3,6
 --elseposition same-line
 --empty void
@@ -11,6 +18,7 @@
 --exponentgrouping disabled
 --extensionacl on-declarations
 --fractiongrouping disabled
+--funcattributes prev-line
 --hexgrouping 4,8
 --hexliteralcase uppercase
 --ifdef no-indent
@@ -19,18 +27,22 @@
 --importgrouping testable-bottom
 --lineaftermarks false # Do not insert a blank line after "MARK: comments"
 --linebreaks lf
+--maxwidth 130
 --octalgrouping 4,8
 --operatorfunc spaced
 --patternlet hoist
 --ranges spaced
 --semicolons inline
+--storedvarattrs same-line
 --stripunusedargs always
 --trimwhitespace always
---maxwidth 130
+--typeattributes prev-line
 --wraparguments before-first
 --wrapcollections before-first
 --wrapconditions after-first
 --wrapparameters before-first
 
 # rules
---disable elseOnSameLine,redundantSelf,redundanttype
+
+--disable elseOnSameLine,redundantSelf,redundantStaticSelf,redundantType,redundantRawValues,redundantReturn,preferForLoop
+--enable blankLinesBetweenImports

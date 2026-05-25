@@ -1,0 +1,6 @@
+[tools]
+swiftformat = "0.61.1"
+swiftlint = "0.63.2"
+
+[settings]
+experimental = true
