@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -10,23 +10,20 @@ let package = Package(
         .iOS(.v13),
         .tvOS(.v13),
         .watchOS(.v6),
-        .visionOS(.v1)
+        .visionOS(.v1),
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "SemanticVersioningKit",
             targets: [
-                "SemanticVersioningKit"
-            ]),
+                "SemanticVersioningKit",
+            ]
+        ),
     ],
     dependencies: [
         // Source code dependencies
-        .package(url: "https://github.com/pointfreeco/swift-parsing", exact: "0.13.0"),
-
-        // Plugins
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0"),
-        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.54.0")
+        .package(url: "https://github.com/pointfreeco/swift-parsing", exact: "0.14.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -34,10 +31,10 @@ let package = Package(
         .target(
             name: "SemanticVersioningKit",
             dependencies: [
-                .product(name: "Parsing", package: "swift-parsing")
+                .product(name: "Parsing", package: "swift-parsing"),
             ],
             resources: [
-                .copy("PrivacyInfo.xcprivacy")
+                .copy("PrivacyInfo.xcprivacy"),
             ]
         ),
         .testTarget(

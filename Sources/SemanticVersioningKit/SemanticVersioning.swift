@@ -8,123 +8,238 @@
 import Foundation
 import Parsing
 
+// MARK: - SemanticVersionParseError
+
+/// An error thrown when a string cannot be parsed as a semantic version.
+public enum SemanticVersionParseError: Error {
+    /// The provided string does not conform to the Semantic Versioning specification.
+    ///
+    /// - Parameter input: The string that failed to parse.
+    case invalidInput(String)
+}
+
 // MARK: - SemanticVersion
-/// A typesafe representation of a Semantic Version
+
+/// A type-safe representation of a [Semantic Version](https://semver.org).
 ///
-/// A semantic version is build with the following schema:
-/// ```text
-/// MAJOR.MINOR.PATCH
-/// ```
-/// In addition labels for pre-releases and build meta data can be added.
+/// A semantic version consists of three required numeric components and two optional
+/// extension components, following this structure:
 ///
-/// Example for pre-release:
 /// ```
-/// 1.0.0-alpha
+/// MAJOR.MINOR.PATCH[-prerelease][+build]
 /// ```
-/// Example for build metadata:
+///
+/// ## Creating a Version
+///
+/// Create a version directly from its numeric components:
+///
+/// ```swift
+/// let release = SemanticVersion(major: 2, minor: 0, patch: 0)
+/// // "2.0.0"
 /// ```
-/// 1.0.0+20130313144700
+///
+/// Optionally include pre-release identifiers or build metadata:
+///
+/// ```swift
+/// let preRelease = SemanticVersion(
+///     major: 1, minor: 0, patch: 0,
+///     preReleaseIdentifiers: ["alpha", "1"]
+/// )
+/// // "1.0.0-alpha.1"
+///
+/// let withBuild = SemanticVersion(
+///     major: 1, minor: 0, patch: 0,
+///     buildIdentifiers: ["exp", "sha", "5114f85"]
+/// )
+/// // "1.0.0+exp.sha.5114f85"
+///
+/// let full = SemanticVersion(
+///     major: 1, minor: 0, patch: 0,
+///     preReleaseIdentifiers: ["beta"],
+///     buildIdentifiers: ["exp", "sha", "5114f85"]
+/// )
+/// // "1.0.0-beta+exp.sha.5114f85"
 /// ```
-/// Pre-release identifiers and build metadata are also able to be combined:
+///
+/// Or parse a version from a string:
+///
+/// ```swift
+/// let version = try SemanticVersion(input: "1.0.0-alpha.1+exp.sha.5114f85")
 /// ```
-/// 1.0.0-beta+exp.sha.5114f85
+///
+/// ## Comparing Versions
+///
+/// ``SemanticVersion`` conforms to `Comparable`, following the precedence rules
+/// defined in the Semantic Versioning specification:
+///
+/// ```swift
+/// let v1 = SemanticVersion(major: 1, minor: 0, patch: 0)
+/// let v2 = SemanticVersion(major: 2, minor: 0, patch: 0)
+/// v1 < v2 // true
 /// ```
-public struct SemanticVersion {
+///
+/// A pre-release version always has lower precedence than its associated release:
+///
+/// ```swift
+/// let alpha = SemanticVersion(major: 1, minor: 0, patch: 0, preReleaseIdentifiers: ["alpha"])
+/// let release = SemanticVersion(major: 1, minor: 0, patch: 0)
+/// alpha < release // true
+/// ```
+///
+/// - Note: Build metadata is ignored entirely when determining version precedence.
+public nonisolated struct SemanticVersion: Sendable {
     let core: Core
 
-    /// Identifiers denoting a pre-release
+    /// The dot-separated identifiers denoting a pre-release version.
+    ///
+    /// For the version string `1.0.0-alpha.1`, this property returns `["alpha", "1"]`.
+    /// Returns an empty array when no pre-release identifiers are present.
     public let preReleaseIdentifiers: [String]
 
-    /// Additional build meta data
+    /// The dot-separated identifiers providing additional build metadata.
+    ///
+    /// For the version string `1.0.0+exp.sha.5114f85`, this property returns
+    /// `["exp", "sha", "5114f85"]`. Returns an empty array when no build
+    /// identifiers are present.
+    ///
+    /// - Note: Build metadata is ignored when determining version precedence.
     public let buildIdentifiers: [String]
 
-    /// The major version number
+    /// The major version number.
     ///
-    /// Increased when incompatible API changes are made
+    /// Represents the first numeric component of the version string. For example,
+    /// the major version of `2.1.3` is `2`.
+    ///
+    /// Increment this when making incompatible API changes.
     public var major: Int {
         core.major
     }
 
-    /// The minor version number
+    /// The minor version number.
     ///
-    /// Increased when functionality is added in a backwards compatible manner
+    /// Represents the second numeric component of the version string. For example,
+    /// the minor version of `2.1.3` is `1`.
+    ///
+    /// Increment this when adding functionality in a backwards-compatible manner.
     public var minor: Int {
         core.minor
     }
 
-    /// The patch version number
+    /// The patch version number.
     ///
-    /// Increased when backwards compatible bug fixes are made
+    /// Represents the third numeric component of the version string. For example,
+    /// the patch version of `2.1.3` is `3`.
+    ///
+    /// Increment this when making backwards-compatible bug fixes.
     public var patch: Int {
         core.patch
     }
 }
 
-// MARK: - Parser
+// MARK: - Parsing
+
 extension SemanticVersion {
     private nonisolated(unsafe) static let parser: AnyParser<Substring, SemanticVersion> = {
-        let alphaNumericAndHypen = Prefix<Substring> { ($0.isLetter || $0.isNumber || $0.isSymbol || $0 == "-") && $0 != "+" }
-            .eraseToAnyParser()
-
-        // Pre-Release identifiers
-        let preReleaseIdentifier = alphaNumericAndHypen
-            .map(String.init)
+        let alphaNumericAndHyphen = Prefix<Substring> {
+            ($0.isLetter || $0.isNumber || $0.isSymbol || $0 == "-") && $0 != "+"
+        }
+        .eraseToAnyParser()
 
         let preReleaseIdentifiersParser = Parse {
             "-"
-            Many {
-                preReleaseIdentifier
-            } separator: {
-                "."
-            }
-        }.eraseToAnyParser()
-
-        // Build identifiers
-        let buildIdentifier = alphaNumericAndHypen
-            .map(String.init)
+            Many { alphaNumericAndHyphen.map(String.init) } separator: { "." }
+        }
+        .eraseToAnyParser()
 
         let buildIdentifiersParser = Parse {
             "+"
-            Many {
-                preReleaseIdentifier
-            } separator: {
-                "."
-            }
-        }.eraseToAnyParser()
+            Many { alphaNumericAndHyphen.map(String.init) } separator: { "." }
+        }
+        .eraseToAnyParser()
 
         return Parse {
             Core.parser
             Optionally { preReleaseIdentifiersParser }
             Optionally { buildIdentifiersParser }
-        }.map { core, preReleaseIdentifiers, buildIdentifierParser in
+        }
+        .map { core, preReleaseIdentifiers, buildIdentifiers in
             SemanticVersion(
                 core: core,
-                preReleaseIdentifiers: preReleaseIdentifiers != nil ? preReleaseIdentifiers! : [],
-                buildIdentifiers: buildIdentifierParser != nil ? buildIdentifierParser! : []
+                preReleaseIdentifiers: preReleaseIdentifiers ?? [],
+                buildIdentifiers: buildIdentifiers ?? []
             )
         }
         .eraseToAnyParser()
     }()
 
-    /// Initialize a new `SemanticVersion` with a `String` representation
+    /// Creates a semantic version by parsing a string.
     ///
-    /// If the `data` does not represent a Semantic Versioning conforming `String` the initialization fails an an error is thrown
+    /// The string must follow the [Semantic Versioning](https://semver.org) format:
     ///
-    /// - Parameters:
-    ///   - data: String to parse
-    public init(input: String) throws {
-        self = try Self.parser.parse(input)
+    /// ```swift
+    /// // Core version only
+    /// let v1 = try SemanticVersion(input: "1.0.0")
+    ///
+    /// // With pre-release identifiers
+    /// let v2 = try SemanticVersion(input: "1.0.0-alpha.1")
+    ///
+    /// // With build metadata
+    /// let v3 = try SemanticVersion(input: "1.0.0+20130313144700")
+    ///
+    /// // With both pre-release identifiers and build metadata
+    /// let v4 = try SemanticVersion(input: "1.0.0-beta+exp.sha.5114f85")
+    /// ```
+    ///
+    /// - Parameter input: A string conforming to the Semantic Versioning specification.
+    /// - Throws: ``SemanticVersionParseError/invalidInput(_:)`` if `input` is not a valid
+    ///   semantic version string.
+    public init(input: String) throws(SemanticVersionParseError) {
+        do {
+            self = try Self.parser.parse(input)
+        } catch {
+            throw SemanticVersionParseError.invalidInput(input)
+        }
     }
 
-    /// Initialize a new Semantic Version
+    /// Creates a semantic version from its individual components.
+    ///
+    /// ```swift
+    /// // "1.0.0"
+    /// let release = SemanticVersion(major: 1, minor: 0, patch: 0)
+    ///
+    /// // "1.0.0-alpha.1"
+    /// let preRelease = SemanticVersion(
+    ///     major: 1, minor: 0, patch: 0,
+    ///     preReleaseIdentifiers: ["alpha", "1"]
+    /// )
+    ///
+    /// // "1.0.0+exp.sha.5114f85"
+    /// let withBuild = SemanticVersion(
+    ///     major: 1, minor: 0, patch: 0,
+    ///     buildIdentifiers: ["exp", "sha", "5114f85"]
+    /// )
+    ///
+    /// // "1.0.0-alpha.1+exp.sha.5114f85"
+    /// let full = SemanticVersion(
+    ///     major: 1, minor: 0, patch: 0,
+    ///     preReleaseIdentifiers: ["alpha", "1"],
+    ///     buildIdentifiers: ["exp", "sha", "5114f85"]
+    /// )
+    /// ```
     ///
     /// - Parameters:
-    ///   - major: Major version
-    ///   - minor: Minor version
-    ///   - patch: Patch version
-    ///   - preReleaseIdentifiers: Array of pre release identifiers
-    ///   - buildIdentifiers: Array of build identifiers
-    public init(major: Int, minor: Int, patch: Int, preReleaseIdentifiers: [String] = [], buildIdentifiers: [String] = []) {
+    ///   - major: The major version. Increment for incompatible API changes.
+    ///   - minor: The minor version. Increment for backwards-compatible new functionality.
+    ///   - patch: The patch version. Increment for backwards-compatible bug fixes.
+    ///   - preReleaseIdentifiers: Identifiers denoting a pre-release version. Defaults to `[]`.
+    ///   - buildIdentifiers: Identifiers providing additional build metadata. Defaults to `[]`.
+    public init(
+        major: Int,
+        minor: Int,
+        patch: Int,
+        preReleaseIdentifiers: [String] = [],
+        buildIdentifiers: [String] = []
+    ) {
         self.core = Core(major: major, minor: minor, patch: patch)
         self.preReleaseIdentifiers = preReleaseIdentifiers
         self.buildIdentifiers = buildIdentifiers
@@ -132,6 +247,7 @@ extension SemanticVersion {
 }
 
 // MARK: - Comparable
+
 extension SemanticVersion: Comparable {
     public static func == (lhs: SemanticVersion, rhs: SemanticVersion) -> Bool {
         !(lhs < rhs) && !(lhs > rhs)
@@ -143,25 +259,20 @@ extension SemanticVersion: Comparable {
             return left < right
         }
 
-        // If both vesions are equal, preReleaseIdentifiers are needed to be checked
-        if lhs.preReleaseIdentifiers.count == 0 { return false }
-        if rhs.preReleaseIdentifiers.count == 0 { return true }
+        if lhs.preReleaseIdentifiers.isEmpty { return false }
+        if rhs.preReleaseIdentifiers.isEmpty { return true }
 
-        for (l, r) in zip(lhs.preReleaseIdentifiers, rhs.preReleaseIdentifiers) {
-            switch (l.isNumber, r.isNumber) {
+        for (left, right) in zip(lhs.preReleaseIdentifiers, rhs.preReleaseIdentifiers) {
+            switch (left.isNumber, right.isNumber) {
             case (true, true):
-                let result = l.compare(r, options: .numeric)
-                if result == .orderedSame {
-                    continue
-                }
+                let result = left.compare(right, options: .numeric)
+                if result == .orderedSame { continue }
                 return result == .orderedAscending
             case (true, false): return true
             case (false, true): return false
             default:
-                if l == r {
-                    continue
-                }
-                return l < r
+                if left == right { continue }
+                return left < right
             }
         }
 
@@ -170,8 +281,9 @@ extension SemanticVersion: Comparable {
 }
 
 // MARK: - Core
+
 extension SemanticVersion {
-    struct Core {
+    struct Core: Sendable {
         let major: Int
         let minor: Int
         let patch: Int
@@ -187,28 +299,43 @@ extension SemanticVersion {
 }
 
 // MARK: - CustomStringConvertible
+
 extension SemanticVersion: CustomStringConvertible {
+    /// A string representation of the semantic version.
+    ///
+    /// Returns the version formatted as `MAJOR.MINOR.PATCH`, appending pre-release
+    /// identifiers and build metadata where present:
+    ///
+    /// ```swift
+    /// SemanticVersion(major: 1, minor: 0, patch: 0).description
+    /// // "1.0.0"
+    ///
+    /// SemanticVersion(major: 1, minor: 0, patch: 0, preReleaseIdentifiers: ["alpha", "1"]).description
+    /// // "1.0.0-alpha.1"
+    ///
+    /// SemanticVersion(
+    ///     major: 1, minor: 0, patch: 0,
+    ///     preReleaseIdentifiers: ["alpha", "1"],
+    ///     buildIdentifiers: ["exp", "sha", "5114f85"]
+    /// ).description
+    /// // "1.0.0-alpha.1+exp.sha.5114f85"
+    /// ```
     public var description: String {
-        var rep = "\(major).\(minor).\(patch)"
+        var result = "\(major).\(minor).\(patch)"
         if !preReleaseIdentifiers.isEmpty {
-            rep.append("-")
-            rep.append(preReleaseIdentifiers.joined(separator: "."))
+            result.append("-")
+            result.append(preReleaseIdentifiers.joined(separator: "."))
         }
         if !buildIdentifiers.isEmpty {
-            rep.append("+")
-            rep.append(buildIdentifiers.joined(separator: "."))
+            result.append("+")
+            result.append(buildIdentifiers.joined(separator: "."))
         }
-
-        return rep
+        return result
     }
 }
 
-// MARK: - Sendable
-#if swift(>=5.5)
-extension SemanticVersion: Sendable {}
-#endif
-
 // MARK: - Helpers
+
 extension String {
     fileprivate var isNumber: Bool {
         !isEmpty && rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
