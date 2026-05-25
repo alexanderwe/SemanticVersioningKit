@@ -87,7 +87,7 @@ public enum SemanticVersionParseError: Error {
 /// ```
 ///
 /// - Note: Build metadata is ignored entirely when determining version precedence.
-public struct SemanticVersion {
+public nonisolated struct SemanticVersion: Sendable {
     let core: Core
 
     /// The dot-separated identifiers denoting a pre-release version.
@@ -283,7 +283,7 @@ extension SemanticVersion: Comparable {
 // MARK: - Core
 
 extension SemanticVersion {
-    struct Core {
+    struct Core: Sendable {
         let major: Int
         let minor: Int
         let patch: Int
@@ -333,10 +333,6 @@ extension SemanticVersion: CustomStringConvertible {
         return result
     }
 }
-
-// MARK: - Sendable
-
-extension SemanticVersion: Sendable {}
 
 // MARK: - Helpers
 
