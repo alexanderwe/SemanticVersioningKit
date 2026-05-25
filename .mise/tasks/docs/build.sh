@@ -61,7 +61,7 @@ mkdir -p "${WEBSITE_HOSTING_DATA}"
 $(xcrun --find docc) process-archive \
     transform-for-static-hosting "${DOCCARCHIVE_PATH}" \
     --output-path "${WEBSITE_OUTPUT_PATH}" \
-    --hosting-base-path "/aemanticversioningkit/"
+    --hosting-base-path "/SemanticVersioningKit/"
 
 # Clean up.
 rm -rf "${DERIVED_DATA_DIR}"
